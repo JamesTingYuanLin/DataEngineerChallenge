@@ -64,19 +64,6 @@ object Test {
 
     val totalSessionTimeAndCountPerUser = userWithSession.map(aUser => aUser.split(",")(ip.index) + "," + DataParsingUtils.getTotalSessionTime(aUser.split(",")(sessionizeData.index)) + "," + DataParsingUtils.getTotalSessionCount(aUser.split(",")(sessionizeData.index)))
     totalSessionTimeAndCountPerUser.repartition(1).saveAsTextFile(outputFilePath + totalSessionTimeAndCountPerUserFileName)
-
-//    sortByUserAndTime.saveAsTextFile(args(1))
-
-//    // (client_IP:port, (time, backend_IP:port))
-//    val usersInfo = filterColumns.groupByKey()
-//
-//    usersInfo.sort
-//    Iterable i =
-//    usersInfo.map(aUser => {
-//      aUser._2.sor
-//    })
-//
-//    usersInfo.saveAsTextFile(args(1))
   }
 
   implicit def rddToPairRDDFunctions[K: ClassTag, V: ClassTag](rdd: RDD[(K, V)]) =
