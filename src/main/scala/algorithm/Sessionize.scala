@@ -14,7 +14,7 @@ object Sessionize {
    * input data is already sorted by time.
    *
    * @param aUser data of a user, sorted by time.
-   * @return
+   * @return (IP,session1StartTime@session1EndTime@session1Duration#session2StartTime@session2EndTime@session2Duration#...$sessionCount)
    */
   def getSessionizedUserdata(aUser: Iterable[(String, String, String)]): String = {
     val userIdentity = aUser.head._1 // use client_IP:port here
@@ -24,9 +24,7 @@ object Sessionize {
     var sessionStrat = accessTime.head
     var sessionEnd = sessionStrat.plusMinutes(15)
     var sessions = List.empty[String] // Record sessionStartTime, sessionEndTime, sessionDuration(in microsecond) in (sessionStartTime@sessionEndTime@sessionDuration)
-    var iterationNums = 1
     for (i <- 1 to accessTime.size - 1) {
-      iterationNums+=1;
 //      val timestamp = accessTime(i).atZone(ZoneId.systemDefault()).toInstant.toEpochMilli
       val timestamp = accessTime(i)
       if (timestamp.toDate.getTime <= sessionEnd.toDate.getTime) { // Having action during sessionWindowTime
@@ -43,7 +41,7 @@ object Sessionize {
     }
     val aSession = sessionStrat + "@" + sessionEnd + "@" + (sessionEnd.toDate.getTime - sessionStrat.toDate.getTime)
     sessions :+= aSession
-    // Using "#" to link each session. For example, session1StartTime@session1EndTime@session1Duration#session2StartTime@session2EndTime@session2Duration
-    return sessions.mkString("#") + "$" + iterationNums + "$" + sessions.size
+    // Using "#" to link each session. For example, session1StartTime@session1EndTime@session1Duration#session2StartTime@session2EndTime@session2Duration$sessionCount
+    return sessions.mkString("#") + "$" + sessions.size
   }
 }
