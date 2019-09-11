@@ -1,8 +1,11 @@
 package utils
 
 /**
- * record format:
+ * Help to parse and get info from specific data format.
+ *
+ * Sessionized data format:
  * (IP,session1StartTime@session1EndTime@session1Duration?uniqueUrlCount#session2StartTime@session2EndTime@session2Duration??uniqueUrlCount#...$sessionCount)
+ *
  */
 object DataParsingUtils {
   val sessionDelimiter = "#"
