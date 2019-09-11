@@ -1,9 +1,8 @@
 package app
 
 import algorithm.Sessionize
-import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.rdd
 import org.apache.spark.rdd.{PairRDDFunctions, RDD}
+import org.apache.spark.{SparkConf, SparkContext}
 import utils.{DataParsingUtils, StringUtils}
 
 import scala.reflect.ClassTag
@@ -13,6 +12,7 @@ object Test {
     /*-------- IO Path & file name --------*/
     val inputFilePath = args(0)
     val outputFilePath = args(1)
+    val sortedByIpAndTimeFileName = "sortByIpAndTime"
     val sessionizedDataFileName = "sessionizedData"
     val avgSessionTimeFileName = "avgSessionTime"
     val totalSessionTimeAndCountPerUserFileName = "totalSessionTimeAndCountPerUser"
@@ -23,12 +23,19 @@ object Test {
     /* Rawdata columns definition */
       val clientIpWithPort = ColumnsDefinition("clientIpWithPort", 2)
       val time = ColumnsDefinition("time", 0)
-      val request = ColumnsDefinition("request", 11)
+      val request = ColumnsDefinition("request", 12)
 
     /* Clean data column definition */
       /* sessionized data */
-      val ip = ColumnsDefinition("", 0)
-      val sessionizeData = ColumnsDefinition("", 1)
+      val ip = ColumnsDefinition("clientIp", 0)
+      val sessionizedData = ColumnsDefinition("sessionizedData", 1)
+      /* totalSessionTimeAndCountPerUser */
+      object TotalSessionTimeAndCountPerUser {
+        val ip = ColumnsDefinition("clientIp", 0)
+        val totalSessionTime = ColumnsDefinition("totalSessionTime", 1)
+        val totalSessionCount = ColumnsDefinition("totalSessionCount", 2)
+      }
+
     /*-------- Columns schema --------*/
 
     val conf = new SparkConf()
@@ -42,6 +49,7 @@ object Test {
 
     // Sortby both Ip and and time
     val sortByUserAndTime = filterColumns.sortBy(_._1)
+    sortByUserAndTime.saveAsTextFile(outputFilePath + sortedByIpAndTimeFileName)
 
     // (client_IP, Iterable(client_IP:port, time, request))
     val groupByUser = sortByUserAndTime.map(r => (r._1._1, r._1._2, r._2)).groupBy(r => r._1)
@@ -55,15 +63,16 @@ object Test {
     // Find average session time
     val totalSessiontime = sc.accumulator(0)
     val totalSessionCount = sc.accumulator(0)
-    val sessionTimes = userWithSession.map(aUser => DataParsingUtils.getTotalSessionTime(aUser.split(",")(sessionizeData.index)))
-    val sessionCounts = userWithSession.map(aUser => DataParsingUtils.getTotalSessionCount(aUser.split(",")(sessionizeData.index)))
+    val sessionTimes = userWithSession.map(aUser => DataParsingUtils.getTotalSessionTime(aUser.split(",")(sessionizedData.index)))
+    val sessionCounts = userWithSession.map(aUser => DataParsingUtils.getTotalSessionCount(aUser.split(",")(sessionizedData.index)))
     sessionTimes.foreach(t => totalSessiontime += (t / 1000)) // convert to second
     sessionCounts.foreach(c => totalSessionCount += c)
     val avgSessionTime = totalSessiontime.value.toDouble / totalSessionCount.value.toDouble
     sc.parallelize(Array("Total session time: " + totalSessiontime.value, "Total session count: " + totalSessionCount.value, "Avg session time: " + avgSessionTime)).repartition(1).saveAsTextFile(outputFilePath + avgSessionTimeFileName) // output avg session result
 
-    val totalSessionTimeAndCountPerUser = userWithSession.map(aUser => aUser.split(",")(ip.index) + "," + DataParsingUtils.getTotalSessionTime(aUser.split(",")(sessionizeData.index)) + "," + DataParsingUtils.getTotalSessionCount(aUser.split(",")(sessionizeData.index)))
-    totalSessionTimeAndCountPerUser.repartition(1).saveAsTextFile(outputFilePath + totalSessionTimeAndCountPerUserFileName)
+    val totalSessionTimeAndCountPerUser = userWithSession.map(aUser => aUser.split(",")(ip.index) + "," + DataParsingUtils.getTotalSessionTime(aUser.split(",")(sessionizedData.index)) + "," + DataParsingUtils.getTotalSessionCount(aUser.split(",")(sessionizedData.index)))
+    val sortByTotalSessionCount = totalSessionTimeAndCountPerUser.sortBy(_.split(",")(TotalSessionTimeAndCountPerUser.totalSessionCount.index), false)
+    sortByTotalSessionCount.repartition(1).saveAsTextFile(outputFilePath + totalSessionTimeAndCountPerUserFileName)
   }
 
   implicit def rddToPairRDDFunctions[K: ClassTag, V: ClassTag](rdd: RDD[(K, V)]) =
