@@ -1,7 +1,7 @@
 *The entry point(main method) is app.Test (/src/main/scala/app/Test.scala)
 
 /----- Answer to the 4 questions  -----/
-
+<pre>
 1. Sessionize the web log by IP. Sessionize = aggregrate all page hits by visitor/IP during a session. https://en.wikipedia.org/wiki/Session_(web_analytics)
   Ans: in file "sessionizedData"
 2. Determine the average session time
@@ -10,11 +10,11 @@
   Ans: in file "sessionizedData"
 4. Find the most engaged users, ie the IPs with the longest session times
   Ans: The first line of file "totalSessionTimeAndCountPerUser"
-  
+ </pre>
 /---------------------------------------/
 
 /----- How to use & project structure -----/
-
+<pre>
 *Version info:
     Spark: 1.6
     Scala: 2.10.7
@@ -26,11 +26,11 @@
     Virtual box, cloudera(quickstart-vm-5.13.0-0-virtualbox).
 
 You can import the build.sbt into a sbt project.
-
+</pre>
 /---------------------------------------/
 
 /----- Project structure -----/
-
+<pre>
 root dir-
   -src/ (source code)
     -main/
@@ -47,11 +47,11 @@ root dir-
   -data/ input and output data.
     -output
       -cleandata.zip (result)
-    
+</pre>    
 /---------------------------------------/
 
  /----- How to use & project structure -----/
- 
+ <pre>
  1. Pack the whole project (I use IntelliJ to do that, Build->Build Artifacts->Build)
  2. submit a spark Job.
         spark-submit --class app.Test yourpath/Paypay.jar inputFilePath outputFilePath
@@ -64,11 +64,11 @@ root dir-
  script FYI:
     hadoop fs -rm -r /tmp/james/cleandata/*
     spark-submit --class app.Test ~/Paypay.jar "/tmp/james/rawdata/*" "/tmp/james/cleandata/"
-    
+</pre>    
 /---------------------------------------/
 
 /----Illustration of Data format and transformation----/
-
+<pre>
 * Output file format:
     1. sortByIpAndTime:
         temp result, sorted by both client's IP and request time. This file can be used to exam correctness.
@@ -91,3 +91,4 @@ root dir-
         Count the session time and count by each user. And sort the result by totalSessionTime. (the first line is the answer of question 4)
             schema: client_IP, totalSessionTime(in millisecond) ,totalSessionCount 
             example: 117.241.247.142,1977166,2
+</pre>
