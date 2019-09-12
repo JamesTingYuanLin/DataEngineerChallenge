@@ -52,7 +52,7 @@ root dir-
 
  /----- How to use & project structure -----/
  
- 1. Pack hold project (I use IntelliJ to do that, Build->Build Artifacts->Build)
+ 1. Pack the whole project (I use IntelliJ to do that, Build->Build Artifacts->Build)
  2. submit a spark Job.
         spark-submit --class app.Test yourpath/Paypay.jar inputFilePath outputFilePath
             example:
