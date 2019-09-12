@@ -46,6 +46,7 @@ root dir-
     -test/
   -data/ input and output data.
     -output
+      -cleandata.zip (result)
     
 /---------------------------------------/
 
@@ -58,6 +59,7 @@ root dir-
                 spark-submit --class app.Test ~/Paypay.jar "/tmp/james/rawdata/*" "/tmp/james/cleandata/"
     Note. You can add more option for spark running mode, e.g. cluster mode...
           I don't use here because here is only on machine to run spark.
+ 3. There is a jar already build,  named Paypay.jar in the root directory.
  
  script FYI:
     hadoop fs -rm -r /tmp/james/cleandata/*
