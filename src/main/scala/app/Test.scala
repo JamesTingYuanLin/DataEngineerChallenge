@@ -29,7 +29,11 @@ object Test {
      * group by user identity. Use Ip address as id. (remove port)
      * (client_IP, time, url)
      */
-    val filterColumns = data.map(line => ((StringUtils.removePort(line.split(" ")(AWSElasticLoadBalancerLog.clientIpWithPort.index)), line.split(" ")(AWSElasticLoadBalancerLog.time.index)), line.split(" ")(AWSElasticLoadBalancerLog.url.index)))
+    val filterColumns = data.map(line => {
+      ((StringUtils.removePort(line.split(" ")(AWSElasticLoadBalancerLog.clientIpWithPort.index)),
+        line.split(" ")(AWSElasticLoadBalancerLog.time.index)),
+        line.split(" ")(AWSElasticLoadBalancerLog.url.index))
+    })
 
     // Sortby both Ip and and time
     val sortByUserAndTime = filterColumns.sortBy(_._1)
@@ -61,14 +65,21 @@ object Test {
     sessionTimes.foreach(t => totalSessiontime += (t / 1000)) // convert to second
     sessionCounts.foreach(c => totalSessionCount += c)
     val avgSessionTime = totalSessiontime.value.toDouble / totalSessionCount.value.toDouble
-    sc.parallelize(Array("Total session time: " + totalSessiontime.value, "Total session count: " + totalSessionCount.value, "Avg session time: " + avgSessionTime)).repartition(1).saveAsTextFile(outputFilePath + avgSessionTimeFileName) // output avg session result
+    sc.parallelize(Array("Total session time: " + totalSessiontime.value,
+      "Total session count: " + totalSessionCount.value,
+      "Avg session time: " + avgSessionTime))
+      .repartition(1).saveAsTextFile(outputFilePath + avgSessionTimeFileName) // output avg session result
 
     /*
      * Total session time and count by each user.
      * Sort by total session count.
      * (IP, totalSessionTime, totalSessionCount)
      */
-    val totalSessionTimeAndCountPerUser = userWithSession.map(aUser => aUser.split(",")(SessionizedData.ip.index) + "," + DataParsingUtils.getTotalSessionTime(aUser.split(",")(SessionizedData.sessionizedData.index)) + "," + DataParsingUtils.getTotalSessionCount(aUser.split(",")(SessionizedData.sessionizedData.index)))
+    val totalSessionTimeAndCountPerUser = userWithSession.map(aUser => {
+      aUser.split(",")(SessionizedData.ip.index) + "," +
+        DataParsingUtils.getTotalSessionTime(aUser.split(",")(SessionizedData.sessionizedData.index)) + "," +
+        DataParsingUtils.getTotalSessionCount(aUser.split(",")(SessionizedData.sessionizedData.index))
+    })
     val sortByTotalSessionCount = totalSessionTimeAndCountPerUser.sortBy(_.split(",")(TotalSessionTimeAndCountPerUser.count.index), false)
     sortByTotalSessionCount.repartition(1).saveAsTextFile(outputFilePath + totalSessionTimeAndCountPerUserFileName)
   }
