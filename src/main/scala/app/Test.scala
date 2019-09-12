@@ -65,9 +65,9 @@ object Test {
     sessionTimes.foreach(t => totalSessiontime += (t / 1000)) // convert to second
     sessionCounts.foreach(c => totalSessionCount += c)
     val avgSessionTime = totalSessiontime.value.toDouble / totalSessionCount.value.toDouble
-    sc.parallelize(Array("Total session time: " + totalSessiontime.value + "seconds",
+    sc.parallelize(Array("Total session time: " + totalSessiontime.value + " seconds",
       "Total session count: " + totalSessionCount.value,
-      "Avg session time: " + avgSessionTime + "seconds"))
+      "Avg session time: " + avgSessionTime + " seconds"))
       .repartition(1).saveAsTextFile(outputFilePath + avgSessionTimeFileName) // output avg session result
 
     /*
@@ -83,7 +83,4 @@ object Test {
     val sortByTotalSessionCount = totalSessionTimeAndCountPerUser.sortBy(_.split(",")(TotalSessionTimeAndCountPerUser.count.index), false)
     sortByTotalSessionCount.repartition(1).saveAsTextFile(outputFilePath + totalSessionTimeAndCountPerUserFileName)
   }
-
-  implicit def rddToPairRDDFunctions[K: ClassTag, V: ClassTag](rdd: RDD[(K, V)]) =
-    new PairRDDFunctions(rdd)
 }
