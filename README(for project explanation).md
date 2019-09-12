@@ -1,4 +1,5 @@
 *The entry point(main method) is app.Test (/src/main/scala/app/Test.scala)
+
 /----- Answer to the 4 questions  -----/
 
 1. Sessionize the web log by IP. Sessionize = aggregrate all page hits by visitor/IP during a session. https://en.wikipedia.org/wiki/Session_(web_analytics)
@@ -25,6 +26,7 @@
     Virtual box, cloudera(quickstart-vm-5.13.0-0-virtualbox).
 
 You can import the build.sbt into a sbt project.
+
 /---------------------------------------/
 
 /----- Project structure -----/
@@ -51,7 +53,7 @@ root dir-
  
  1. Pack hold project (I use IntelliJ to do that, Build->Build Artifacts->Build)
  2. submit a spark Job.
-        spark-submit --class app.Test ~/Paypay.jar inputFilePath outputFilePath
+        spark-submit --class app.Test yourpath/Paypay.jar inputFilePath outputFilePath
             example:
                 spark-submit --class app.Test ~/Paypay.jar "/tmp/james/rawdata/*" "/tmp/james/cleandata/"
     Note. You can add more option for spark running mode, e.g. cluster mode...
@@ -60,6 +62,7 @@ root dir-
  script FYI:
     hadoop fs -rm -r /tmp/james/cleandata/*
     spark-submit --class app.Test ~/Paypay.jar "/tmp/james/rawdata/*" "/tmp/james/cleandata/"
+    
 /---------------------------------------/
 
 /----Illustration of Data format and transformation----/
