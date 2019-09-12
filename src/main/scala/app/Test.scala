@@ -50,24 +50,24 @@ object Test {
      * Sessionized data format: (IP,session1StartTime@session1EndTime@session1Duration?uniqueUrlCount#session2StartTime@session2EndTime@session2Duration??uniqueUrlCount#...$sessionCount)
      * (IP, sessionizedData)
      */
-    val userWithSession = groupByUser.map(aUser => {
+    val userSessions = groupByUser.map(aUser => {
       aUser._1 + "," + Sessionize.getSessionizedUserdata(aUser._2)
     })
-    userWithSession.repartition(1).saveAsTextFile(outputFilePath + sessionizedDataFileName) // output the sessionized data
+    userSessions.repartition(1).saveAsTextFile(outputFilePath + sessionizedDataFileName) // output the sessionized data
 
     /*
      * Find average session time
      */
     val totalSessiontime = sc.accumulator(0)
     val totalSessionCount = sc.accumulator(0)
-    val sessionTimes = userWithSession.map(aUser => DataParsingUtils.getTotalSessionTime(aUser.split(",")(SessionizedData.sessionizedData.index)))
-    val sessionCounts = userWithSession.map(aUser => DataParsingUtils.getTotalSessionCount(aUser.split(",")(SessionizedData.sessionizedData.index)))
+    val sessionTimes = userSessions.map(aUser => DataParsingUtils.getTotalSessionTime(aUser.split(",")(SessionizedData.sessionizedData.index)))
+    val sessionCounts = userSessions.map(aUser => DataParsingUtils.getTotalSessionCount(aUser.split(",")(SessionizedData.sessionizedData.index)))
     sessionTimes.foreach(t => totalSessiontime += (t / 1000)) // convert to second
     sessionCounts.foreach(c => totalSessionCount += c)
     val avgSessionTime = totalSessiontime.value.toDouble / totalSessionCount.value.toDouble
-    sc.parallelize(Array("Total session time: " + totalSessiontime.value,
+    sc.parallelize(Array("Total session time: " + totalSessiontime.value + "seconds",
       "Total session count: " + totalSessionCount.value,
-      "Avg session time: " + avgSessionTime))
+      "Avg session time: " + avgSessionTime + "seconds"))
       .repartition(1).saveAsTextFile(outputFilePath + avgSessionTimeFileName) // output avg session result
 
     /*
@@ -75,7 +75,7 @@ object Test {
      * Sort by total session count.
      * (IP, totalSessionTime, totalSessionCount)
      */
-    val totalSessionTimeAndCountPerUser = userWithSession.map(aUser => {
+    val totalSessionTimeAndCountPerUser = userSessions.map(aUser => {
       aUser.split(",")(SessionizedData.ip.index) + "," +
         DataParsingUtils.getTotalSessionTime(aUser.split(",")(SessionizedData.sessionizedData.index)) + "," +
         DataParsingUtils.getTotalSessionCount(aUser.split(",")(SessionizedData.sessionizedData.index))

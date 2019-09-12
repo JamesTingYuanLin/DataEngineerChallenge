@@ -12,7 +12,7 @@ object Sessionize {
    *   3. Total session count for this user
    *
    * Here, it uses Time-oriented approaches but can only estimate roughly.
-   * Assume that server will close session if the client have no more action after the last action.
+   * Assume that server will close session after a period if the client have no more action after the last action.
    *
    * The session window time is adjustable.
    *

@@ -3,17 +3,99 @@ Check randomly(Not implement in auto test tools)
 
 * Hypothesis:
   1. Assume session timeout if users don't take any action between 15 minutes.
-  2. Server will close session after 15 minutes from time point of the last action performed by uses.
+  2. Server will close session after 15 minutes(this time window can be adjusted) from time point of the last action performed by uses.
   3. time unit for statistics: second
-
-
-* File format:
-
-
 
 * Test case:
 case 1:
+    IP: 117.241.247.210
+        total session time(in millisecond): 1116629
+        counts of established session: 1
+        session aggregation: 117.241.247.210,2015-07-22T10:31:07.883Z@2015-07-22T10:49:44.512Z@1116629?8$1
+            Session aggregation can be parsed to be the following:
+                IP: 117.241.247.210
+                        session 1:
+                            start time: 2015-07-22T10:31:07.883Z
+                            end time: 2015-07-22T10:49:44.512Z
+                            duration(in millisecond): 1116629
+                            unique url visited: 8
 
+records of 113.19.35.249 in rawdata (sorted by ip, time)
+((117.241.247.210,2015-07-22T10:31:07.883371Z),https://paytm.com:443/shop/authresponse?code=4b25d2c0-f9b5-419c-a2da-6b11e011f7bc&state=null)
+((117.241.247.210,2015-07-22T10:31:08.222844Z),https://paytm.com:443/shop/v1/frequentorders?channel=web&version=2)
+((117.241.247.210,2015-07-22T10:31:08.230033Z),https://paytm.com:443/shop/cart?channel=web&version=2)
+((117.241.247.210,2015-07-22T10:31:14.095455Z),https://paytm.com:443/shop/wallet/txnhistory?page_size=10&page_number=0&channel=web&version=2)
+((117.241.247.210,2015-07-22T10:31:14.103266Z),https://paytm.com:443/shop/wallet/balance?channel=web&version=2)
+((117.241.247.210,2015-07-22T10:31:58.640164Z),https://paytm.com:443/shop/v1/frequentorders?channel=web&version=2)
+((117.241.247.210,2015-07-22T10:34:11.801599Z),https://paytm.com:443/shop/summary/1116541673)
+((117.241.247.210,2015-07-22T10:34:13.746695Z),https://paytm.com:443/shop/cart?channel=web&version=2)
+((117.241.247.210,2015-07-22T10:34:14.051645Z),https://paytm.com:443/shop/orderdetail/1116541673?channel=web&version=2)
+((117.241.247.210,2015-07-22T10:34:24.283245Z),https://paytm.com:443/shop/orderdetail/1116541673?channel=web&version=2)
+((117.241.247.210,2015-07-22T10:34:34.360781Z),https://paytm.com:443/shop/orderdetail/1116541673?channel=web&version=2)
+((117.241.247.210,2015-07-22T10:34:44.374252Z),https://paytm.com:443/shop/orderdetail/1116541673?channel=web&version=2)
+((117.241.247.210,2015-07-22T10:34:44.512032Z),https://paytm.com:443/shop/action)
+
+case 2:
+    IP: 113.19.35.249
+        total session time(in millisecond): 2058771
+        counts of established session: 2
+        session aggregation: 113.19.35.249,2015-07-22T17:42:04.035Z@2015-07-22T17:59:49.564Z@1065529?5#2015-07-22T18:01:44.266Z@2015-07-22T18:18:17.508Z@993242?2$2
+            Session aggregation can be parsed to be the following:
+                IP: 113.19.35.249
+                        session 1:
+                            start time: 2015-07-22T17:42:04.035Z
+                            end time: 2015-07-22T17:59:49.564Z
+                            duration(in millisecond): 1065529
+                            unique url visited: 5
+                        session 2:
+                            start time: 2015-07-22T18:01:44.266Z
+                            end time: 2015-07-22T18:18:17.508Z
+                            duration(in millisecond): 993242
+                            unique url visited: 2
+
+records of 113.19.35.249 in rawdata (sorted by ip, time)
+((113.19.35.249,2015-07-22T17:42:04.035768Z),https://paytm.com:443/about)
+((113.19.35.249,2015-07-22T17:42:05.056465Z),https://paytm.com:443/papi/v1/promosearch/product/12012579/offers?parent_id=12013209)
+((113.19.35.249,2015-07-22T17:44:00.018276Z),https://paytm.com:443/papi/v1/promosearch/product/12637767/offers?parent_id=12637794)
+((113.19.35.249,2015-07-22T17:44:36.198882Z),https://paytm.com:443/papi/v1/promosearch/product/12637772/offers?parent_id=12637793)
+((113.19.35.249,2015-07-22T17:44:49.564823Z),https://paytm.com:443/papi/v1/promosearch/product/7546677/offers?parent_id=7546805)
+((113.19.35.249,2015-07-22T18:01:44.266648Z),https://paytm.com:443/papi/v1/promosearch/product/9289906/offers?parent_id=9289972)
+((113.19.35.249,2015-07-22T18:03:17.508000Z),https://paytm.com:443/shop/log)
+
+case 3:
+    IP: 115.248.233.203
+    total session time(in millisecond): 5982370
+    counts of established session: 5
+    session aggregation: 115.248.233.203,2015-07-22T10:45:29.910Z@2015-07-22T11:02:00.267Z@990357#2015-07-22T11:02:31.810Z@2015-07-22T11:19:46.037Z@1034227#2015-07-22T16:10:32.773Z@2015-07-22T16:39:21.428Z@1728655#2015-07-22T16:41:24.506Z@2015-07-22T16:58:51.106Z@1046600#2015-07-22T18:00:28.521Z@2015-07-22T18:20:11.052Z@1182531$5
+        Session aggregation can be parsed to be the following:
+            IP: 115.248.233.203
+                    session 1:
+                        start time: 2015-07-22T10:45:29.910Z
+                        end time: 2015-07-22T11:02:00.267Z
+                        duration(in millisecond): 990357
+                        unique url visited: 13
+                    session 2:
+                        start time: 2015-07-22T11:02:31.810Z
+                        end time: 2015-07-22T11:19:46.037Z
+                        duration(in millisecond): 1034227
+                        unique url visited: 5
+                    session 3:
+                        start time: 2015-07-22T16:10:32.773Z
+                        end time: 2015-07-22T16:39:21.428Z
+                        duration(in millisecond): 1728655
+                        unique url visited: 86
+                    session 4:
+                        start time: 2015-07-22T16:41:24.506Z
+                        end time: 2015-07-22T16:58:51.106Z
+                        duration(in millisecond): 1046600
+                        unique url visited: 1
+                    session 5:
+                        start time: 2015-07-22T18:00:28.521Z
+                        end time: 2015-07-22T18:20:11.052Z
+                        duration(in millisecond): 1182531
+                        unique url visited: 25
+
+records of 115.248.233.203 in rawdata (sorted by ip, time)
 ((115.248.233.203,2015-07-22T10:45:29.910921Z),https://paytm.com:443/shop/cart)
 ((115.248.233.203,2015-07-22T10:45:30.311136Z),https://paytm.com:443/shop/cart)
 ((115.248.233.203,2015-07-22T10:45:31.401457Z),https://paytm.com:443/shop/cart)
@@ -185,31 +267,3 @@ case 1:
 ((115.248.233.203,2015-07-22T18:04:18.781942Z),https://paytm.com:443/papi/nps/merchantverification)
 ((115.248.233.203,2015-07-22T18:04:18.861050Z),https://paytm.com:443/shop/wallet/filteredUsertxnHistory)
 ((115.248.233.203,2015-07-22T18:05:11.052536Z),https://paytm.com:443/)
-
-
-    IP 115.248.233.203
-    total session time: 5982370
-    counts of established session: 5
-    session aggregation: 115.248.233.203,2015-07-22T10:45:29.910Z@2015-07-22T11:02:00.267Z@990357#2015-07-22T11:02:31.810Z@2015-07-22T11:19:46.037Z@1034227#2015-07-22T16:10:32.773Z@2015-07-22T16:39:21.428Z@1728655#2015-07-22T16:41:24.506Z@2015-07-22T16:58:51.106Z@1046600#2015-07-22T18:00:28.521Z@2015-07-22T18:20:11.052Z@1182531$5
-        Session aggregation can be parsed to be the following:
-            IP: 115.248.233.203
-                    session 1:
-                        start time: 2015-07-22T10:45:29.910Z
-                        end time: 2015-07-22T11:02:00.267Z
-                        duration(in millisecond): 990357
-                    session 2:
-                        start time: 2015-07-22T11:02:31.810Z
-                        end time: 2015-07-22T11:19:46.037Z
-                        duration(in millisecond): 1034227
-                    session 3:
-                        start time: 2015-07-22T16:10:32.773Z
-                        end time: 2015-07-22T16:39:21.428Z
-                        duration(in millisecond): 1728655
-                    session 4:
-                        start time: 2015-07-22T16:41:24.506Z
-                        end time: 2015-07-22T16:58:51.106Z
-                        duration(in millisecond): 1046600
-                    session 5:
-                        start time: 2015-07-22T18:00:28.521Z
-                        end time: 2015-07-22T18:20:11.052Z
-                        duration(in millisecond): 1182531
