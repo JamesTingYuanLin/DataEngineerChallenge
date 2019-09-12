@@ -78,9 +78,9 @@ root dir-
     3. avgSessionTime: 
         session statistic (also as the answer of question 2)
             example:
-                Total session time: 110882642 seconds
+                Total session time: 110869458 seconds
                 Total session count: 110838
-                Avg session time: 1000.4027680037532 seconds
+                Avg session time: 1000.2838196286472 seconds
 
     4. totalSessionTimeAndCountPerUser:
         Count the session time and count by each user. And sort the result by totalSessionTime. (the first line is the answer of question 4)

@@ -3,11 +3,8 @@ package app
 import algorithm.Sessionize
 import etl.schema.csvColumns.cleandata.{SessionizedData, TotalSessionTimeAndCountPerUser}
 import etl.schema.csvColumns.rawdata.AWSElasticLoadBalancerLog
-import org.apache.spark.rdd.{PairRDDFunctions, RDD}
 import org.apache.spark.{SparkConf, SparkContext}
 import utils.{DataParsingUtils, StringUtils}
-
-import scala.reflect.ClassTag
 
 object Test {
   def main(args: Array[String]): Unit = {
@@ -32,7 +29,7 @@ object Test {
     val filterColumns = data.map(line => {
       ((StringUtils.removePort(line.split(" ")(AWSElasticLoadBalancerLog.clientIpWithPort.index)),
         line.split(" ")(AWSElasticLoadBalancerLog.time.index)),
-        line.split(" ")(AWSElasticLoadBalancerLog.url.index))
+        StringUtils.removeUrlParameters(line.split(" ")(AWSElasticLoadBalancerLog.url.index)))
     })
 
     // Sortby both Ip and and time
